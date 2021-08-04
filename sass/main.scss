@@ -5,6 +5,7 @@
 }
 
 .slider-main {
+    position: relative;
     width: 100%;
     overflow: hidden;
 
@@ -55,6 +56,29 @@
 
         p {
             margin: 0 .2em;
+        }
+    }
+
+    .indicator-list {
+        position: absolute;
+        display: flex;
+        column-gap: .5em;
+        bottom: 20px;
+        left: 50%;
+        list-style: none;
+        transform: translateX(-50%);
+
+        .indicator-item {
+            width: 30px;
+            height: 7px;
+            background: #fff;
+            border-radius: 1px;
+            opacity: .4;
+            cursor: pointer;
+        }
+
+        .active-item {
+            opacity: 1;
         }
     }
 }

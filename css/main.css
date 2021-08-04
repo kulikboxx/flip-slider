@@ -6,6 +6,7 @@
 }
 
 .slider-main {
+  position: relative;
   width: 100%;
   overflow: hidden;
 }
@@ -71,5 +72,32 @@
 
 .slider-main .slider-numbers p {
   margin: 0 .2em;
+}
+
+.slider-main .indicator-list {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: .5em;
+          column-gap: .5em;
+  bottom: 20px;
+  left: 50%;
+  list-style: none;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
+.slider-main .indicator-list .indicator-item {
+  width: 30px;
+  height: 7px;
+  background: #fff;
+  border-radius: 1px;
+  opacity: .4;
+  cursor: pointer;
+}
+
+.slider-main .indicator-list .active-item {
+  opacity: 1;
 }
 /*# sourceMappingURL=main.css.map */
