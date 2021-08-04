@@ -1,4 +1,6 @@
 let slides = document.querySelectorAll('.slide'),
+    current = document.querySelector('.current'),
+    total = document.querySelector('.total'),
     currentSlide = 0;
 
 const initSlider = () => {
@@ -8,7 +10,11 @@ const initSlider = () => {
         slide.style.width = sliderMain.offsetWidth + 'px';
         document.querySelector('.slider-wrapper').style.width = sliderMain.offsetWidth * slides.length + 'px';
     });
+
+    current.textContent = `0${currentSlide + 1}`;
 }
+
+slides.length < 10 ? total.textContent = `0${slides.length}` : total.textContent = slides.length;
 
 initSlider();
 
@@ -17,6 +23,7 @@ const flipSlide = () => {
     if (currentSlide < 0) currentSlide = slides.length - 1;
 
     slides.forEach(slide => slide.style.transform = `translate(-${currentSlide * slide.offsetWidth}px)`);
+    currentSlide < 9 ? current.textContent = `0${currentSlide + 1}` : current.textContent = currentSlide + 1;
 }
 
 document.addEventListener('click', e => {

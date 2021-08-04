@@ -56,4 +56,20 @@
   cursor: pointer;
   outline: none;
 }
+
+.slider-main .slider-numbers {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  bottom: 30px;
+  right: 30px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+.slider-main .slider-numbers p {
+  margin: 0 .2em;
+}
 /*# sourceMappingURL=main.css.map */
