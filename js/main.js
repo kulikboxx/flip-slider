@@ -1,79 +1,92 @@
-let slides = document.querySelectorAll('.slide'),
-    current = document.querySelector('.current'),
-    total = document.querySelector('.total'),
-    indicatorsList,
-    currentSlide = 0;
+'use strict';
 
-const initSlider = () => {
-    let sliderMain = document.querySelector('.slider-main');
+let count = 0;
+
+function initSlider(slider, wrapper, slide) {
+    let sliderMain = document.querySelector(slider),
+        sliderWrapper = document.querySelector(wrapper),
+        slides = document.querySelectorAll(slide);
 
     slides.forEach(slide => {
         slide.style.width = sliderMain.offsetWidth + 'px';
-        document.querySelector('.slider-wrapper').style.width = sliderMain.offsetWidth * slides.length + 'px';
+        sliderWrapper.style.width = slide.style.width.slice(0, -2) * slides.length + 'px';
     });
-    current.textContent = `0${currentSlide + 1}`;
+}
 
-    indicatorsList = document.createElement('ol');
-    indicatorsList.classList.add('indicator-list');
+initSlider('.slider-main', '.slider-wrapper', '.slide');
+window.addEventListener('resize', () => initSlider('.slider-main', '.slider-wrapper', '.slide'));
+
+function createIndicators(slider, slide) {
+    let sliderMain = document.querySelector(slider),
+        slides = document.querySelectorAll(slide);
+
+    let indicatorList = document.createElement('ul');
+    indicatorList.classList.add('indicator-list');
 
     for (let i = 0; i < slides.length; i++) {
-        let indicatorItem = document.createElement('li');
+        const indicatorItem = document.createElement('li');
         indicatorItem.classList.add('indicator-item');
-        indicatorsList.append(indicatorItem);
+        indicatorList.appendChild(indicatorItem);
     }
-    sliderMain.append(indicatorsList);
-    document.querySelector('.indicator-item:first-child').classList.add('active-item');
+
+    sliderMain.append(indicatorList);
+    indicatorList.firstElementChild.classList.add('active-item');
 }
 
-initSlider();
+function showSlideNumber(current, total, slides) {
+    let currentSlide = document.querySelector(current),
+        totalSlides = document.querySelector(total),
+        allSlides = document.querySelectorAll(slides);
 
-slides.length < 10 ? total.textContent = `0${slides.length}` : total.textContent = slides.length;
-
-const flipSlide = () => {
-    if (currentSlide === slides.length) currentSlide = 0;
-    if (currentSlide < 0) currentSlide = slides.length - 1;
-
-    slides.forEach(slide => slide.style.transform = `translate(-${currentSlide * slide.offsetWidth}px)`);
-    currentSlide < 9 ? current.textContent = `0${currentSlide + 1}` : current.textContent = currentSlide + 1;
-
-    const liItems = document.querySelectorAll('.indicator-item');
-
-    for (let i = 0; i < liItems.length; i++) {
-        liItems[i].classList.remove('active-item');
-        liItems[currentSlide].classList.add('active-item');
-    }
+    currentSlide.textContent = count + 1;
+    totalSlides.textContent = allSlides.length;
 }
 
-document.addEventListener('click', e => {
-    if (e.target.classList.contains('next')) {
-        currentSlide++;
-        flipSlide();
-    } else if (e.target.classList.contains('prev')) {
-        currentSlide--;
-        flipSlide();
-    }
-});
+createIndicators('.slider-main', '.slide');
+showSlideNumber('.current', '.total', '.slide');
 
-document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') {
-        currentSlide++;
-        flipSlide();
-    } else if (e.key === 'ArrowLeft') {
-        currentSlide--;
-        flipSlide();
-    }
-});
+function flipSlides(slide, items) {
+    let slides = document.querySelectorAll(slide),
+        indicators = document.querySelectorAll(items);
 
-const changeIndicator = e => {
-    document.querySelectorAll('.indicator-item').forEach((item, i) => {
-        item.classList.remove('active-item');
-        if (e.target === item) {
-            currentSlide = i;
-            flipSlide();
-            e.target.classList.add('active-item');
+    if (count == slides.length) count = 0;
+    if (count < 0) count = slides.length - 1;
+
+    indicators.forEach(indicator => indicator.classList.remove('active-item'));
+    indicators[count].classList.add('active-item');
+    slides.forEach(slide => slide.style.transform = `translateX(-${count * slide.style.width.slice(0, -2)}px)`);
+
+    showSlideNumber('.current', '.total', slide);
+}
+
+function changeIndicators(e, items) {
+    let indicators = document.querySelectorAll(items);
+
+    indicators.forEach((indicator, index) => {
+        indicator.classList.remove('active-item');
+
+        if (e.target === indicator) {
+            count = index;
+            flipSlides('.slide', '.indicator-item');
         }
     });
 }
 
-indicatorsList.addEventListener('click', changeIndicator);
-window.addEventListener('resize', initSlider);
+document.querySelector('.prev').addEventListener('click', () => {
+    count--;
+    flipSlides('.slide', '.indicator-item');
+});
+document.querySelector('.next').addEventListener('click', () => {
+    count++;
+    flipSlides('.slide', '.indicator-item');
+});
+document.querySelector('.indicator-list').addEventListener('click', (e) => changeIndicators(e, '.indicator-item'));
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') {
+        count++;
+        flipSlides('.slide', '.indicator-item');
+    } else if (e.key === 'ArrowLeft') {
+        count--;
+        flipSlides('.slide', '.indicator-item');
+    }
+});
